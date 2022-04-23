@@ -17,5 +17,5 @@ from dicebear.styles import micah
 # User interface
 ui.main_page(
     styles=[micah],
-    api_endpoint="https://avatars.dicebear.com/api/micah/seed.svg"
+    api_endpoint="https://avatars.dicebear.com/api"
 )

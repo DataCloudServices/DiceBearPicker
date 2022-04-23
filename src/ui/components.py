@@ -26,10 +26,11 @@ def render_select(option: dict) -> str:
     )
     return None if res == 'null' else f"{option['label']}={res}"
 
-def side_bar(styles: typing.Iterable) -> str:
+def side_bar(styles: typing.Iterable) -> typing.Tuple[str, str, str]:
     st.sidebar.title('Settings')
 
     # Settings
+    seed: str = st.sidebar.text_input('seed', value="seed")
     style_names: list = [style.NAME for style in styles]
     style: str = st.sidebar.selectbox('Pick your style', options=style_names)
     
@@ -41,7 +42,7 @@ def side_bar(styles: typing.Iterable) -> str:
         for option in style_options
     ]
     choices: list = [render_select(option) for option in format_options]
-    return '&'.join([choice for choice in choices if choice if not None])
+    return (seed, style, '&'.join([choice for choice in choices if choice if not None]))
 
 def render_svg(svg: str):
     """Renders the given svg string."""
@@ -55,11 +56,11 @@ def render_image(image_url: str):
 
 def main_page(**kwargs):
     # Sidebar
-    options: str = side_bar(styles=kwargs.get('styles'))
+    seed, style, options = side_bar(styles=kwargs.get('styles'))
     
     # Main page
     st.title('DiceBearPicker · Pick your avatar')
-    api_endpoint: str = kwargs.get('api_endpoint')
+    api_endpoint: str = f"{kwargs.get('api_endpoint')}/{style}/{seed}.svg"
     image_url: str = f'{api_endpoint}?{options}'
     st.write(f"{image_url}", language='bash')
     
